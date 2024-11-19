@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% include 'customer/includes/header.html' %}
+
+  </head>
+  <body>
+    <div class="main-container">
+     
+        {% include 'customer/includes/menu.html' %}
+        {% include 'customer/includes/items-header.html' %}
+     
+
+
+      <div class="Containet-box" >
+     
+        {% include 'customer/includes/messages.html' %}
+        
+
+        <div class="container mt-5">
+          {% if items %}
+            <h2>My Shopping Cart</h2>
+    
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Item Total</th>
+                        <th>Restaurants Comments</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  {%for item in items%}
+                    <tr>
+                      <td>
+                          <img src="{{ item['picture_link'] }}" width="50px" alt="image" class="img-thumbnail mr-2">
+                          {{ item['Name'] }}
+                      </td>
+                      <td>{{ item['quantity'] }}</td>
+                      <td>${{ item['price'] }}</td>
+                      <td>${{ item['price'] *  item['quantity'] }}</td>
+                      <td>
+                        <button class="btn btn-primary btn-sm" onclick="editAdditionalText({{ item['id'] }}, '{{ item['additional_text'] }}')">
+                          <i class="fas fa-edit"></i> Edit
+                        </button>
+                        {% if item['additional_text'] %}
+                          {{ item['additional_text'] }}
+                        {% else %}
+                            (No comments)
+                        {% endif %}
+                      </td>
+                      <td>
+                          <button class="btn btn-danger btn-sm" onclick="deleteCart({{ item['id'] }})">
+                              <i class="fas fa-trash"></i> Delete
+                          </button>
+                      </td>
+                    </tr>
+                  {%endfor%}
+                </tbody>
+            </table>
+    
+            
+            <form method="POST" >
+              
+              <div class="text-right">
+                  <h4>Total Price: <strong>${{ total_price }}</strong></h4>
+
+                  <button type="submit" name="checkout" class="btn btn-primary btn-lg">Submit Order</button>
+              </div>
+            </form>
+          {% else %}
+            <div class="text-center">
+              <p>*You have no products in your cart</p>
+              <a href="/customer-view-businesses">
+                <button type="submit" name="checkout" class="btn btn-primary btn-lg">Place Order</button>
+              </a>
+            </div>
+          {% endif %}
+
+      </div>
+  
+        
+
+      </div>
+
+      <!-- The Modal -->
+      <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+              <form method="POST" >
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Remove Item From Cart</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <input type="hidden" name="item_id" id="item_id">
+                  </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" name="delete_item" class="btn btn-danger btn-sm">
+                      <i class="fas fa-trash"></i> Delete
+                  </button>
+                </div>
+              </form>
+              
+
+            </div>
+          </div>
+        </div>
+  
+
+        <div class="modal" id="editModal">
+          <div class="modal-dialog">
+              <div class="modal-content">
+  
+                <form method="POST" >
+  
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                      <h4 class="modal-title">Edit additional text to the resturant</h4>
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  </div>
+  
+                  <!-- Modal Body -->
+                  <div class="modal-body">
+                    <input type="hidden" name="item_id" id="edit_item_id">
+                    <p>*enter additional text (e.g. "Burger without onions please") for the restaurant</p>
+                    <textarea name="additional_text" rows="5" cols="30" placeholder="Enter additional text here"/></textarea>
+                  </div>
+  
+                  <!-- Modal Footer -->
+                  <div class="modal-footer">
+                      <button type="submit" name="save_additional_text" class="btn btn-primary btn-sm">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                  </div>
+                </form>
+                
+  
+              </div>
+            </div>
+          </div>
+    
+    </div>
+    {% include 'customer/includes/footer.html' %}
+
+  </body>
+</html>

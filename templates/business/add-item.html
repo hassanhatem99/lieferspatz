@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% include 'business/includes/header.html' %}
+ </head>
+  <body>
+    <div class="main-container">
+
+        {% include 'business/includes/menu.html' %}
+        {% include 'business/includes/items-header.html' %}
+     
+
+     
+      <div class="Containet-box" >
+        
+        <form method="POST" class="text-center" enctype="multipart/form-data">
+            <h5>Item Name:</h5>
+            <input type="text"  name="name" required placeholder ="Enter Item Name" required>
+            <hr>
+            <h5>Item Price:</h5>
+            <input type="number"  name="price" required placeholder ="Enter Item Price" required>
+            <hr>
+            <h5>Item Category:</h5>
+
+            <select name="category">
+              <option value="-1">--select category--</option>
+
+              {%for category in categories%}
+                <option value="{{ category['category'] }}">{{ category['category'] }}</option>
+              {%endfor%}
+            </select>
+
+            <hr>
+            <h5>Item Description:</h5>
+
+            <textarea  rows="5" cols="30" name="description" required placeholder ="Enter Item Description" required></textarea>
+            <hr>
+
+
+            <p>*Choose picture for the item</p>
+            <input type="file" class="UploadImg" id="photoInput" name="picture" accept="image/*"  >
+            <hr>
+   
+
+
+          <button class="add-item" >Save Item</button>
+        </form>
+      </div>
+
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="jss.js"></script>
+  </body>
+</html>

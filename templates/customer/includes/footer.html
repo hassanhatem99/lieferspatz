@@ -1,0 +1,21 @@
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    function chooseQuantity(item_id) {
+        $('#item_id').val(item_id);
+        $('#myModal').modal('show');
+    }
+
+    function deleteCart(item_id) {
+        $('#item_id').val(item_id);
+        $('#myModal').modal('show');
+    }
+
+    function editAdditionalText(item_id, text) {
+        $('#edit_item_id').val(item_id);
+        $('#editModal').modal('show');
+    }
+
+    
+</script>

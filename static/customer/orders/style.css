@@ -1,0 +1,392 @@
+.lieferspatz {
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.lieferspatz .div {
+  background-color: #ffffff;
+  border: 10px solid;
+  border-color: green;
+  /* width: 1440px;
+  height: 1200px; */
+  position: relative;
+}
+input[type="text"] {
+  position: relative;   
+  width: 145px;
+  height: 50px;
+  background: rgb(239, 239, 239);
+  border-radius: 20px;
+  border: none;
+  text-align: center;
+}
+input[type="text-1"] {
+  position: relative;
+  width: 175px;
+  height: 50px;
+  background: rgb(239, 239, 239);
+  border-radius: 20px;
+  border: none;
+  text-align: center;
+  margin: 7px;
+}
+
+input[type="text-2"] {   
+  position: relative;
+  width: 387px;
+  height: 50px;
+  margin: 33px 0 0 34.966px;
+  background: rgb(239, 239, 239);
+  border-radius: 20px;
+  border: none;
+  text-align: center;
+
+}
+input[type="text-3"] {   
+  position: relative;
+  width: 215px;
+  height: 50px;
+  background: rgb(239, 239, 239);
+  border-radius: 20px;
+  border: none;
+  text-align: center;
+
+}
+input[type="text-4"] {   
+    width: 385px;
+    height: 50px;
+    margin: 34px 0 0px 34.966px;
+    background: rgb(239, 239, 239);
+    border-radius: 20px;
+    border: none;
+    text-align: center;
+}
+
+
+
+
+.lieferspatz .overlap {
+  position: absolute;
+  width: 1420px;
+  height: 70px;
+  top: 0;
+  left: 0;
+  background-color: greenb8;
+  border-radius: 0px 0px 15px 0px;
+  box-shadow: 0px 4px 4px #00000040;
+}
+.lieferspatz .overlap-1
+{
+  position: absolute;
+  width: 300px;
+  height: 70px;
+  top: 0;
+  left: 0;
+  background-color: #ffffff;
+  border-radius: 0px 0px 15px 0px;
+  box-shadow: 0px 4px 4px #00000040;
+}
+
+.lieferspatz .screenshot { 
+  width: 100px;
+  height: 70px;
+  object-fit: cover;
+}
+.lieferspatz .lieferspatz-name
+{ 
+  position: absolute;
+  font-size: xx-large;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-weight: bolder;
+  top: 15px;
+}
+
+.lieferspatz .group {
+  position: absolute;
+  width: 445px;
+  height: 791px;
+  top: 155px;
+  left: 413px;
+}
+
+
+.RestaurantsBestellhistorie {
+  display: inline-block;
+  position: relative;
+  height: 31px;
+  left: -1px;
+  margin: 28px 0 0 26.966px;
+  font-family: DM Sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei", "Source Han Sans CN", sans-serif;
+  color: rgb(0, 0, 0);
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 31px;
+  text-align: center;
+  z-index: 24;
+}
+form {
+  background-color: rgb(98 35 137 / 58%);
+  width: 370px;
+  top: 94px;
+  position: absolute;
+  left: 33px;
+  height: 46px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+input {
+  all: unset;
+  font: 16px system-ui;
+  color: #fff;
+  height: 100%;
+  width: 100%;
+  padding: 6px 10px;
+}
+::placeholder {
+  color: #fff;
+  opacity: 0.7; 
+}
+.lieferspatz .line-0 {
+  position: absolute;
+  width: 300px;
+  height: 0;
+  top: 55px;
+  left: 63px;
+  object-fit:scale-down;
+}
+.rectangle-5 {
+  flex-shrink: 0;
+  position: relative;
+  width: 130.695px;
+  height: 40px;
+  background: rgb(239, 239, 239);
+  z-index: 12;
+  border-radius: 20px;
+}
+/*
+.weiterBox {
+  position: absolute;
+  width: 311px;
+  top: 472px;
+  left: -45px;
+  height: 50px;
+  margin: 43px 0 0 72.966px;
+  background: rgb(98 35 137 / 82%);
+  z-index: 27;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.weiter {
+  position: absolute;
+  height: 30px;
+  top: 10px;
+  left: 125px;
+  font-family: DM Sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei", "Source Han Sans CN", sans-serif;
+  color: rgb(255, 255, 255);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 30px;
+  text-align: left;
+  z-index: 27;
+}
+*/
+.line {
+  position: relative;
+  width: 406.463px;
+  margin: 56px 0 0 25.966px;
+  background: url(./assets/images/7ba72745-1dfb-4358-9164-cd9b79dec13a.png)
+    no-repeat center;
+  background-size: cover;
+  z-index: 14;
+}
+.reCAPTCHA-and-Google {
+  display: inline-block;
+  position: relative;
+  width: 299px;
+  height: 74px;
+  margin: 17px 0 0 29.966px;
+  font-family: DM Sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC",
+    "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei",
+    "Source Han Sans CN", sans-serif;
+  color: rgb(144, 144, 144);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20.832px;
+  text-align: left;
+  z-index: 28;
+}
+.rectangle-8 {
+  position: absolute;
+  width: 1423px;
+  height: 115px;
+  top: 0;
+  left: 10px;
+  background: rgba(98, 35, 137, 0.72);
+  filter: blur(2px);
+  border-radius: 0 0 30px 0;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.lieferspatz .p {
+  position: absolute;
+  width: 309px;
+  top: 583px;
+  left: 29px;
+  font-family: "DM Sans", Helvetica;
+  font-weight: 700;
+  color: #909090;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+.lieferspatz .line-3 {
+  position: absolute;
+  width: 300px;
+  height: 0px;
+  top: 567px;
+  left: 35px;
+  object-fit: scale-down;
+}
+.searchbox {
+  position: relative;
+  width: 100px;
+  top: -20px;
+  height: 26px;
+  left: -13px;
+  margin: 43px 0 0 72.966px;
+  background: rgb(255, 255, 255);
+  z-index: 27;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.search {
+  position: absolute;
+  height: 30px;
+  top: -4px;
+  left: 6px;
+  font-family: DM Sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei", "Source Han Sans CN", sans-serif;
+  color: #909090;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 30px;
+  text-align: left;
+  z-index: 0;
+}
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+}
+
+.order-history {
+  position: relative;
+  float: initial;
+  width: 355px;
+  max-width: 800px;
+  color: dimgrey;
+  margin: 20px auto;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.order-item {
+  border-bottom: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #ffffff;
+  padding: 20px;
+  width: 30%;
+  height: 30%;
+  font-family: DM Sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC",
+  "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei",
+  "Source Han Sans CN", sans-serif;
+  font-weight: 500;
+  border-radius: 8px;
+  box-shadow: 26px 29px 20px green;
+}
+
+.close-btn {
+  font-size: 30px;
+  position: relative;
+  cursor: pointer;
+}
+.button-details {
+  position: relative !important;
+  background-color: rgb(98 35 137 / 51%) !important;
+  border: none !important;
+  border-radius: 6px !important;
+  margin-top: 10px !important;
+  width: 70px !important;
+  cursor: pointer !important;
+  height: 25px !important ;
+  font-weight: 600 !important;
+  color: white !important;
+}
+.order-state
+{
+  position: relative !important;
+  background-color: rgb(35 137 61 / 51%) !important;
+  border: none !important;
+  margin-top: 0px !important;
+  width: 120px !important;
+  /* height: 52px; */
+  float: inline-end !important;
+  height: 34px !important;
+  font-weight: 600 !important;
+  color: white !important;
+}
+.plan{
+  position: relative !important;
+  width: 35% !important;
+  float: inline-end !important;
+}
+.dropdown:hover>.dropdown-menu {
+  display: block;
+}
+
+.dropdown>.dropdown-toggle:active {
+    pointer-events: none;
+}
+.add{
+  position: relative;
+  
+}
