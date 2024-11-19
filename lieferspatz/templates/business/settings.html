@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% include 'business/includes/header.html' %}
+</head>
+  <body>
+    <div class="main-container">
+
+        {% include 'business/includes/menu.html' %}
+        {% include 'business/includes/items-header.html' %}
+     
+
+     
+      <div class="Containet-box" >  
+        
+        {% include 'business/includes/messages.html' %}
+        <form method="POST" class="text-center" enctype="multipart/form-data">
+          <h5>Opening Hours:</h5>
+
+          <input type="time"  name="opening_hours" value="{{ item['opening_hours'] }}"  required>
+          <hr>
+          <h5>Closing Hours:</h5>
+          
+          <input type="time"  name="closing_hours" value="{{ item['closing_hours'] }}"  required>
+          <hr>
+          <h5>delivery radius:</h5>
+          <p>*Enter each delivery zip code in a new line</p>
+          <p>(example.) <br>A001<br>A002<br>A003</p>
+
+          <textarea  rows="5" cols="30" name="delivery_radius"  required placeholder ="(example.) &#10;A001&#10;A002&#10;A003" required>{{ item['delivery_radius'] or '' }}</textarea>
+          <hr>
+          
+
+
+          <button class="add-item" >Save Settings</button>
+        </form>
+      </div>
+
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="jss.js"></script>
+  </body>
+</html>
