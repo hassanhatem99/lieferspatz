@@ -170,9 +170,12 @@ def customer_view_menu(business_id):
 
         cursor.execute('INSERT INTO Cart (customer_id, item_id, quantity) VALUES (?, ?, ?)',
                         (session['user_id'], item_id, quantity))
+        
+        cursor.execute('SELECT Name FROM Items WHERE id = ?', (item_id))
+        item = cursor.fetchone()
         conn.commit()
         
-        flash(f'Item (x{quantity}) Added to cart successfully...', 'success')
+        flash(f'{item['Name']} (x{quantity}) Added to cart successfully...', 'success')
 
 
     # get all businesses for this business
