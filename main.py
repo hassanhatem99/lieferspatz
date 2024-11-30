@@ -237,6 +237,7 @@ def customer_view_cart():
             return redirect(url_for('customer_view_cart'))
 
         elif 'checkout' in request.form:
+            #TODO if customer has enough balance
             # get all items in cart
             cursor.execute('''
                 SELECT * FROM Cart JOIN Items ON Cart.item_id = Items.id WHERE Cart.customer_id = ?

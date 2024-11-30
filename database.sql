@@ -18,6 +18,7 @@ CREATE TABLE CustomerAccount (
     street VARCHAR(255) NOT NULL,
     zip_code VARCHAR(10) NOT NULL,
     password VARCHAR(255) NOT NULL,
+    balance FLOAT DEFAULT 100,
    
     FOREIGN KEY (Email) REFERENCES Account(Email) 
 );
