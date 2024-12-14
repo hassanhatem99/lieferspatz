@@ -61,29 +61,46 @@ def customer_register():
         email = request.form['email']
         street = request.form['street']
         zip_code = request.form['zip_code']
+        city = request.form['city']
         password = request.form['password']
 
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        cursor.execute('SELECT * FROM CustomerAccount WHERE email = ?', (email,))
-        user = cursor.fetchone()
+        # Check if the email already exists in the Account table
+        cursor.execute('SELECT * FROM Account WHERE Email = ?', (email,))
+        account = cursor.fetchone()
 
-        if user :
-            flash('Failed!! User with this email already exists', 'danger')
+        if account:
+            flash('Failed! User with this email already exists.', 'danger')
             return render_template('customer/register.html')
 
+        try:
+            # Insert into the base table (Account)
+            cursor.execute('''
+                INSERT INTO Account (Email, Password, Street, ZIPCode, City)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (email, password, street, zip_code, city))
 
-        cursor.execute('''
-            INSERT INTO CustomerAccount (FirstName, LastName, Email, street, zip_code, password)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', (first_name, last_name, email, street, zip_code, password))
+            # Get the ID of the newly inserted Account
+            new_account_id = cursor.lastrowid
 
-        conn.commit()
-        conn.close()
+            # Insert into the derived table (CustomerAccount)
+            cursor.execute('''
+                INSERT INTO CustomerAccount (account_id, FirstName, LastName)
+                VALUES (?, ?, ?)
+            ''', (new_account_id, first_name, last_name))  # Default balance
 
-        flash('Account created successfully...', 'success')
-        return redirect(url_for('customer_login'))
+            conn.commit()
+            flash('Account created successfully!', 'success')
+            return redirect(url_for('customer_login'))
+        except Exception as e:
+            # Rollback in case of any error
+            conn.rollback()
+            flash(f'An error occurred: {str(e)}', 'danger')
+            return render_template('customer/register.html')
+        finally:
+            conn.close()
 
     return render_template('customer/register.html')
 
@@ -97,23 +114,25 @@ def customer_login():
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        cursor.execute('SELECT * FROM customerAccount WHERE email = ?', (email,))
-        user = cursor.fetchone()
+        cursor.execute('SELECT * FROM Account WHERE Email = ?', (email,))
+        account = cursor.fetchone()
 
+        cursor.execute('SELECT * FROM CustomerAccount WHERE account_id = ?', (account['id'],))
+        user = cursor.fetchone()
         conn.close()
 
         if user :
-            if user['password'] == password:
+            if account['password'] == password:
                 flash('Login successful!', 'success')
 
                 # logout any current logged in user
                 if session.get('user_id'):
                     session.clear()
 
-                session['user_id'] = user['id']
+                session['account_id'] = account['id']
                 session['user_type'] = 'customer'
-                session['user_name'] = user['firstname'] + ' ' + user['lastname']
-                session['user_email'] = user['email']
+                session['user_name'] = user['FirstName'] + ' ' + user['LastName']
+                session['user_email'] = account['Email']
                 return redirect(url_for('customer_view_businesses'))
             else:
                 flash('Failed!! Please check your password.', 'danger')
@@ -130,8 +149,8 @@ def customer_view_businesses():
     cursor = conn.cursor()
 
     # first get user details
-    cursor.execute('SELECT * FROM customerAccount WHERE id = ?', (session['user_id'],))
-    user = cursor.fetchone()
+    cursor.execute('SELECT * FROM Account WHERE id = ?', (session['account_id'],))
+    account = cursor.fetchone()
 
     # Get the current time
     current_time = datetime.now().time()
@@ -144,7 +163,7 @@ def customer_view_businesses():
     cursor.execute('''SELECT * FROM BusinessAccount 
                     WHERE LOWER(delivery_radius) LIKE LOWER(?) 
                         AND ? BETWEEN opening_hours AND closing_hours
-                    ''', ('%' + user['zip_code'] + '%', formatted_time))
+                    ''', ('%' + account['ZIPCode'] + '%', formatted_time))
 
     items = cursor.fetchall()
 

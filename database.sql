@@ -4,23 +4,22 @@
 -- Creating Account Table (Generalized Entity)
 
 CREATE TABLE Account (
-    Email VARCHAR(50) PRIMARY KEY Not null,
-    Password VARCHAR(25) Not NULL,
+    id INTEGER PRIMARY KEY NOT NULL,
+    Email VARCHAR(50) NOT NULL UNIQUE,
+    Password VARCHAR(25) NOT NULL,
     Street VARCHAR(25),
-    ZIPCode INT
+    ZIPCode VARCHAR(10),
+    City VARCHAR(255) NOT NULL
 );
+
 -- Creating CustomerAccount Table (Inherits Account)
 CREATE TABLE CustomerAccount (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     FirstName VARCHAR(25) NOT NULL,
     LastName VARCHAR(25) NOT NULL,
-    Email VARCHAR(50) UNIQUE,
-    street VARCHAR(255) NOT NULL,
-    zip_code VARCHAR(10) NOT NULL,
-    password VARCHAR(255) NOT NULL,
     balance FLOAT DEFAULT 100,
-   
-    FOREIGN KEY (Email) REFERENCES Account(Email) 
+
+    account_id INTEGER NOT NULL REFERENCES Account(id)
 );
 
 -- Creating BusinessAccount Table
@@ -28,17 +27,12 @@ CREATE TABLE BusinessAccount (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    street VARCHAR(255) NOT NULL,
-    city VARCHAR(255) NOT NULL,
-    zip_code VARCHAR(10) NOT NULL,
     opening_hours VARCHAR(100),
     closing_hours VARCHAR(100),
     delivery_radius TEXT,
     picture_link VARCHAR(255),
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-
-    FOREIGN KEY (Email) REFERENCES Account(Email)
+    
+    account_id INTEGER NOT NULL REFERENCES Account(id)
 );
 
 -- Creating Menu Table
