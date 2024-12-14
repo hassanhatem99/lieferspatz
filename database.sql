@@ -52,7 +52,9 @@ CREATE TABLE Items (
     Description TEXT,
     category VARCHAR(255),
     Price DECIMAL(10, 2),
-    picture_link VARCHAR(255)
+    picture_link VARCHAR(255),
+
+    business_id INTEGER NOT NULL REFERENCES BusinessAccount(id)
     
 );
 
@@ -62,8 +64,7 @@ CREATE TABLE Cart (
     customer_id INTEGER,
     item_id INTEGER,
     quantity INTEGER,
-    additional_text TEXT
-
+    additional_text TEXT,
     
 );
 -- Creating Orders Table

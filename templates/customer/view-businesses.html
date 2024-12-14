@@ -16,22 +16,22 @@
      
         {% include 'customer/includes/messages.html' %}
 
-        {% if items %}
+        {% if businesses %}
 
         <div id="products" class="products">
           
-            {%for item in items%}
-                <a href="/customer-view-menu/{{ item['id'] }}" style="text-decoration: none;">
+            {% for business in businesses %}
+                <a href="/customer-view-menu/{{ business['id'] }}" style="text-decoration: none;">
                     <div class="rectangle-25 editable-container" data-container-id="rectangle-25" >
-                        <img src="{{ item['picture_link'] }}" class="pic-7 editable-element">
-                        <p class="wings editable-element" >{{ item['name'] }}</p>
-                        <p class="wings-discription editable-element">Location: {{ item['city'] }}, {{ item['street'] }}</p>
-                        <p class="wings-discription editable-element">Business Hours: {{ item['opening_hours'] }} - {{ item['closing_hours'] }}</p>
+                        <img src="{{ business['picture_link'] }}" class="pic-7 editable-element">
+                        <p class="wings editable-element" >{{ business['name'] }}</p>
+                        <p class="wings-discription editable-element">Location: {{ business['city'] }}, {{ business['street'] }}</p>
+                        <p class="wings-discription editable-element">Business Hours: {{ business['opening_hours'] }} - {{ business['closing_hours'] }}</p>
                         
                             <button id="toggleButton" data-container-id="rectangle-25" class="addButton-2">Available</button>
                     </div>
                 </a>
-            {%endfor%}
+            {% endfor %}
 
         </div>
         {% else %}
@@ -50,10 +50,10 @@
     <script src="jss.js"></script>
 
     <script>
-        function confirmDelete(item_id) {
-            var result = confirm("Are you sure you want to delete this item?");
+        function confirmDelete(business_id) {
+            var result = confirm("Are you sure you want to delete this business?");
             if (result) {
-                window.location.href = '/business-delete-item/'+item_id;  // Replace with your actual delete URL
+                window.location.href = '/business-delete-business/'+business_id;  // Replace with your actual delete URL
             }
         }
     </script>

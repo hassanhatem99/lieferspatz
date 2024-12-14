@@ -148,33 +148,28 @@ def customer_view_businesses():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # first get user details
+    # Get user details
     cursor.execute('SELECT * FROM Account WHERE id = ?', (session['account_id'],))
     account = cursor.fetchone()
 
     # Get the current time
     current_time = datetime.now().time()
-
-    # Format the time as 'hh:mm'
     formatted_time = current_time.strftime('%H:%M')
 
+    # Get all businesses that are open and deliver within the user's ZIP code
+    # Join BusinessAccount with Account to fetch location details
+    cursor.execute('''
+        SELECT b.*, a.Street, a.City, a.ZIPCode
+        FROM BusinessAccount b
+        JOIN Account a ON b.account_id = a.id
+        WHERE LOWER(b.delivery_radius) LIKE LOWER(?) 
+            AND ? BETWEEN b.opening_hours AND b.closing_hours
+    ''', ('%' + account['ZIPCode'] + '%', formatted_time))
 
-    # next get all business that are open and supply within users zip code
-    cursor.execute('''SELECT * FROM BusinessAccount 
-                    WHERE LOWER(delivery_radius) LIKE LOWER(?) 
-                        AND ? BETWEEN opening_hours AND closing_hours
-                    ''', ('%' + account['ZIPCode'] + '%', formatted_time))
-
-    items = cursor.fetchall()
-
-    # cursor.execute('select SUBSTR(time(\'now\'), 1, 5)')
-    
-    # print(dict(cursor.fetchone()))
-
-
+    businesses = cursor.fetchall()
     conn.close()
 
-    return render_template('customer/view-businesses.html', items=items)
+    return render_template('customer/view-businesses.html', businesses=businesses)
 
 
 # route to view item in business menu
@@ -365,10 +360,10 @@ def business_register():
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        cursor.execute('SELECT * FROM BusinessAccount WHERE email = ?', (email,))
-        user = cursor.fetchone()
+        cursor.execute('SELECT * FROM Account WHERE Email = ?', (email,))
+        account = cursor.fetchone()
 
-        if user :
+        if account :
             flash('Failed!! User with this email already exists', 'danger')
             return render_template('business/register.html')
 
@@ -388,15 +383,21 @@ def business_register():
 
                 # save the path to the uploaded picture
                 picture = f'/{UPLOAD_FOLDER}{filename}'
-           
-
 
 
 
         cursor.execute('''
-            INSERT INTO BusinessAccount (name, description, street, city, zip_code, email, password, picture_link)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (name, description, street, city, zip_code, email, password, picture))
+                INSERT INTO Account (Email, Password, Street, ZIPCode, City)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (email, password, street, zip_code, city))
+
+        # Get the ID of the newly inserted Account
+        new_account_id = cursor.lastrowid
+         
+        cursor.execute('''
+                INSERT INTO BusinessAccount (account_id, name, description, picture_link)
+                VALUES (?, ?, ?, ?)
+                ''', (new_account_id, name, description, picture))
 
         conn.commit()
         conn.close()
@@ -416,22 +417,25 @@ def business_login():
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        cursor.execute('SELECT * FROM BusinessAccount WHERE email = ?', (email,))
-        user = cursor.fetchone()
+        cursor.execute('SELECT * FROM Account WHERE Email = ?', (email,))
+        account = cursor.fetchone()
 
+        cursor.execute('SELECT * FROM BusinessAccount WHERE account_id = ?', (account['id'],))
+        business = cursor.fetchone()
         conn.close()
 
-        if user :
-            if user['password'] == password:
+        if business :
+            if account['password'] == password:
                 flash('Login successful!', 'success')
+
                 # logout any current logged in user
-                if session.get('user_id'):
+                if session.get('account_id'):
                     session.clear()
 
-                session['user_id'] = user['id']
+                session['account_id'] = account['id']
                 session['user_type'] = 'business'
-                session['user_name'] = user['name']
-                session['user_email'] = user['email']
+                session['user_name'] = business['name']
+                session['user_email'] = account['Email']
                 return redirect(url_for('business_view_items'))
             else:
                 flash('Failed!! Please check your password.', 'danger')
@@ -476,18 +480,24 @@ def business_add_item():
 
                 # save the path to the uploaded picture
                 picture = f'/{UPLOAD_FOLDER}{filename}'
-           
+        
+
+        cursor.execute('SELECT * FROM BusinessAccount WHERE account_id = ?', 
+            (session['account_id'],)
+        )
+
+        business = cursor.fetchone()
 
         
         cursor.execute('''
-            INSERT INTO Items (business_id, name, description, category, price, picture_link)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', (session['user_id'], name, description, category, price, picture))
+                INSERT INTO Items (business_id, Name, Description, category, Price, picture_link)
+                VALUES (?, ?, ?, ?, ?, ?)
+                ''', (business['id'], name, description, category, price, picture))
 
         conn.commit()
         conn.close()
 
-        flash('Item Added Sucessfully', 'sucess')
+        flash('Item Added Sucessfully', 'success')
         return redirect(url_for('business_view_items'))
 
     conn = get_db_connection()
@@ -585,7 +595,10 @@ def business_view_items():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT * FROM items WHERE business_id = ?', (session['user_id'],))
+    cursor.execute('SELECT * FROM BusinessAccount WHERE account_id = ?', (session['account_id'],))
+    business = cursor.fetchone()
+
+    cursor.execute('SELECT * FROM items WHERE business_id = ?', (business['id'],))
     items = cursor.fetchall()
 
 
@@ -675,20 +688,20 @@ def business_settings():
                     SET opening_hours = ?,
                        closing_hours = ?,
                        delivery_radius = ?
-                        WHERE id = ?
-            ''', (opening_hours, closing_hours, delivery_radius, session['user_id']))
+                        WHERE account_id = ?
+            ''', (opening_hours, closing_hours, delivery_radius, session['account_id']))
         conn.commit()
         conn.close()
 
-        flash('Details Saved Sucessfully', 'sucess')
+        flash('Details Saved Sucessfully', 'success')
         return redirect(url_for('business_settings'))
 
     conn = get_db_connection()
     cursor = conn.cursor()
 
     cursor.execute('''
-        SELECT * FROM BusinessAccount WHERE id = ?
-    ''', (session['user_id'],))
+        SELECT * FROM BusinessAccount WHERE account_id = ?
+    ''', (session['account_id'],))
     item = cursor.fetchone()
 
     conn.close()
