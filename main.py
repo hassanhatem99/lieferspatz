@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session # type: ignore
 import sqlite3
-from werkzeug.utils import secure_filename
+from werkzeug.utils import secure_filename # type: ignore
 import uuid
 import os
 from datetime import datetime
