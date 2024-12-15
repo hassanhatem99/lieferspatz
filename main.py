@@ -118,10 +118,10 @@ def customer_login():
         account = cursor.fetchone()
 
         cursor.execute('SELECT * FROM CustomerAccount WHERE account_id = ?', (account['id'],))
-        user = cursor.fetchone()
+        customer = cursor.fetchone()
         conn.close()
 
-        if user :
+        if customer :
             if account['password'] == password:
                 flash('Login successful!', 'success')
 
@@ -130,8 +130,9 @@ def customer_login():
                     session.clear()
 
                 session['account_id'] = account['id']
+                session['customer_id'] = customer['id']
                 session['user_type'] = 'customer'
-                session['user_name'] = user['FirstName'] + ' ' + user['LastName']
+                session['user_name'] = customer['FirstName'] + ' ' + customer['LastName']
                 session['user_email'] = account['Email']
                 return redirect(url_for('customer_view_businesses'))
             else:
@@ -183,7 +184,7 @@ def customer_view_menu(business_id):
         quantity = request.form['quantity']
 
         cursor.execute('INSERT INTO Cart (customer_id, item_id, quantity) VALUES (?, ?, ?)',
-                        (session['user_id'], item_id, quantity))
+                        (session['customer_id'], item_id, quantity))
         
         cursor.execute('SELECT Name FROM Items WHERE id = ?', (item_id))
         item = cursor.fetchone()
@@ -255,37 +256,51 @@ def customer_view_cart():
 
         elif 'checkout' in request.form:
             #TODO if customer has enough balance
+            cursor.execute('SELECT balance FROM CustomerAccount WHERE id = ?', (session['customer_id'],))
+            balance = cursor.fetchone()['balance']
+            total_price = 0
             # get all items in cart
             cursor.execute('''
                 SELECT * FROM Cart JOIN Items ON Cart.item_id = Items.id WHERE Cart.customer_id = ?
-            ''', (session['user_id'],))
-            items = cursor.fetchall()
+            ''', (session['customer_id'],))
+            cart_items = cursor.fetchall()
 
-            for item in items:
-                # save all items in cart to the orders table
-                cursor.execute('''
-                    INSERT INTO Orders (customer_id, business_id, item_id, quantity, additional_text, order_status)
-                    VALUES (?, ?, ?, ?, ?, ?)
-                ''', (item['customer_id'], item['business_id'], item['item_id'], item['quantity'], item['additional_text'], 'processing'))
-
-            conn.commit()
-
-            # we can now delete items in the cart for this user
-            cursor.execute('''
-                DELETE FROM Cart WHERE customer_id = ?
-            ''', (session['user_id'],))
-            conn.commit()
-
+            # Get the total price
+            for cart_item in cart_items:
+                total_price += cart_item['price'] * cart_item['quantity']
             
+            print('price is',total_price)
 
-            flash(f'Order Placed Sucessfully', 'success')
-            return redirect(url_for('customer_view_orders'))
+            if balance >= total_price:
+                for cart_item in cart_items:
+                    # save all items in cart to the orders table
+                    cursor.execute('''
+                        INSERT INTO Orders (customer_id, business_id, item_id, quantity, additional_text, order_status)
+                        VALUES (?, ?, ?, ?, ?, ?)
+                    ''', (cart_item['customer_id'], cart_item['business_id'], cart_item['item_id'], cart_item['quantity'], cart_item['additional_text'], 'processing'))
+                            # we can now delete items in the cart for this user
+                cursor.execute('''
+                    DELETE FROM Cart WHERE customer_id = ?
+                ''', (session['customer_id'],))
+
+                new_balance = balance - total_price
+                cursor.execute('''UPDATE CustomerAccount 
+                                  SET balance = ?
+                                  WHERE id = ?''', (new_balance, session['customer_id']))
+
+                conn.commit()
+                flash(f'Order Placed Sucessfully', 'success')
+
+                return redirect(url_for('customer_view_orders'))
+            else:
+                flash(f"You don't have enough balance", 'danger')
+                return redirect(url_for('customer_view_cart'))
 
     # get all items in cart
     cursor.execute('''
         SELECT * FROM Cart JOIN Items ON Cart.item_id = Items.id WHERE Cart.customer_id = ?
         
-    ''', (session['user_id'],))
+    ''', (session['customer_id'],))
     items = cursor.fetchall()
 
     conn.close()
@@ -318,7 +333,7 @@ def customer_view_orders():
         Orders.created_at DESC
         
         
-    ''', (session['user_id'],))
+    ''', (session['customer_id'],))
     items = cursor.fetchall()
 
     conn.close()
@@ -392,12 +407,14 @@ def business_register():
             ''', (email, password, street, zip_code, city))
 
         # Get the ID of the newly inserted Account
-        new_account_id = cursor.lastrowid
+        cursor.execute('SELECT id FROM Account WHERE Email = ?', (email,))
+
+        new_account = cursor.fetchone()
          
         cursor.execute('''
                 INSERT INTO BusinessAccount (account_id, name, description, picture_link)
                 VALUES (?, ?, ?, ?)
-                ''', (new_account_id, name, description, picture))
+                ''', (new_account['id'], name, description, picture))
 
         conn.commit()
         conn.close()
@@ -433,6 +450,7 @@ def business_login():
                     session.clear()
 
                 session['account_id'] = account['id']
+                session['business_id'] = business['id']
                 session['user_type'] = 'business'
                 session['user_name'] = business['name']
                 session['user_email'] = account['Email']
@@ -480,11 +498,6 @@ def business_add_item():
 
                 # save the path to the uploaded picture
                 picture = f'/{UPLOAD_FOLDER}{filename}'
-        
-
-        cursor.execute('SELECT * FROM BusinessAccount WHERE account_id = ?', 
-            (session['account_id'],)
-        )
 
         business = cursor.fetchone()
 
@@ -492,7 +505,7 @@ def business_add_item():
         cursor.execute('''
                 INSERT INTO Items (business_id, Name, Description, category, Price, picture_link)
                 VALUES (?, ?, ?, ?, ?, ?)
-                ''', (business['id'], name, description, category, price, picture))
+                ''', (session['business_id'], name, description, category, price, picture))
 
         conn.commit()
         conn.close()
@@ -595,12 +608,8 @@ def business_view_items():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT * FROM BusinessAccount WHERE account_id = ?', (session['account_id'],))
-    business = cursor.fetchone()
-
-    cursor.execute('SELECT * FROM items WHERE business_id = ?', (business['id'],))
+    cursor.execute('SELECT * FROM items WHERE business_id = ?', (session['business_id'],))
     items = cursor.fetchall()
-
 
     conn.close()
 

@@ -47,7 +47,6 @@ CREATE TABLE Menu (
 -- Creating Item Table
 CREATE TABLE Items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    business_id INTEGER,
     Name VARCHAR(255),
     Description TEXT,
     category VARCHAR(255),
@@ -61,17 +60,18 @@ CREATE TABLE Items (
 -- Creating Cart Table
 CREATE TABLE Cart (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    customer_id INTEGER,
     item_id INTEGER,
     quantity INTEGER,
     additional_text TEXT,
+
+    customer_id INTEGER NOT NULL REFERENCES CustomerAccount(id)
     
 );
 -- Creating Orders Table
 CREATE TABLE Orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    customer_id INTEGER,
-    business_id INTEGER,
+    customer_id INTEGER NOT NULL REFERENCES CustomerAccount(id),
+    business_id INTEGER NOT NULL REFERENCES BusinessAccount(id),
     item_id INTEGER,
     quantity INTEGER,
     additional_text TEXT,
