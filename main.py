@@ -83,13 +83,15 @@ def customer_register():
             ''', (email, password, street, zip_code, city))
 
             # Get the ID of the newly inserted Account
-            new_account_id = cursor.lastrowid
+            cursor.execute('SELECT id FROM Account WHERE Email = ?', (email,))
+
+            new_account = cursor.fetchone()
 
             # Insert into the derived table (CustomerAccount)
             cursor.execute('''
                 INSERT INTO CustomerAccount (account_id, FirstName, LastName)
                 VALUES (?, ?, ?)
-            ''', (new_account_id, first_name, last_name))  # Default balance
+            ''', (new_account['id'], first_name, last_name))  # Default balance
 
             conn.commit()
             flash('Account created successfully!', 'success')
@@ -673,7 +675,7 @@ def business_view_orders():
                 END, 
                 Orders.created_at DESC
         
-    ''', (session['user_id'],))
+    ''', (session['business_id'],))
     items = cursor.fetchall()
 
     conn.close()
