@@ -1,0 +1,27 @@
+.gradient-custom {
+    /* fallback for old browsers */
+    background: #fc4436;
+    
+    /* Chrome 10-25, Safari 5.1-6 */
+    /* background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1)); */
+    
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    /* background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1)) */
+}
+
+.card img
+{
+    width: 100%;
+}
+
+.btn-custom
+{
+    background-color: #fc4436;
+    width: 60%;
+}
+
+.btn-custom:hover
+{
+    background-color: #000;
+    color:#fff;
+}
